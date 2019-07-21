@@ -1,14 +1,13 @@
 package com.funshopper.FunshopperDomain.Controller;
 
-import static springfox.documentation.builders.PathSelectors.regex;
 
-import java.time.LocalDate;
+import static springfox.documentation.builders.PathSelectors.regex;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,9 +25,13 @@ public class ApiController {
 
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2).directModelSubstitute(LocalDate.class, String.class).select()
-				.apis(RequestHandlerSelectors.any()).paths(regex(".*/api/.*")).build().pathMapping("/")
+		return new Docket(DocumentationType.SWAGGER_2)
+				 .select()
+		         .apis(RequestHandlerSelectors.withClassAnnotation(RepositoryRestResource.class))
+				 .paths(regex(".*/api/.*")).build().pathMapping("/")
 				.apiInfo(new ApiInfoBuilder().title(applicationName + " Endpoints").build());
+				//.apis(RequestHandlerSelectors.any()).
+
 	}
 
 	@GetMapping(value = "/")
